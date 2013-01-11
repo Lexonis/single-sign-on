@@ -20,5 +20,6 @@ The JSON data looks like so:
 
 Other values (or "claims") may be passed if they have been agreed upon with your Lexonis representative.
 
-The JSON is then encoded to a UTF-8 byte-array and encrypted using [AES](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) uisng a pre-shared key which your Lexonis representative will supply. This token is then [Base64](http://en.wikipedia.org/wiki/Base64) encoded and passed to the QA site URL-encoded.
+The JSON is then encoded to a UTF-8 byte-array and encrypted using [AES](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) using a pre-shared key which your Lexonis representative will supply. This token is then [Base64](http://en.wikipedia.org/wiki/Base64) encoded and passed to the QA site URL-encoded.
+
 
