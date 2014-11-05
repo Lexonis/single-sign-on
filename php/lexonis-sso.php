@@ -42,6 +42,7 @@
     <body>
         <form id="ssoform" method="post" action="<?php echo htmlspecialchars($sso_url) ?>">
             <input type="hidden" name="token" value="<?php echo htmlspecialchars($token) ?>">
+            <!-- In case script fails/not enabled, give them something to click -->
             <input type="submit" value="Continue">
         </form>
         <script>
