@@ -1,63 +1,38 @@
 ﻿<%@ Page Language="C#" %>
-<%@ Import Namespace="System.Security.Cryptography" %>
 
-<script runat="server">
+<%
     // TODO: update URL and Key to your own
-    const string SSO_URL = "http://site.example.com/account/sso?token={0}";
-    const string SSO_KEY = "0123456789abcdef0123456789abcdef";
+    var ssoUrl = "http://site.example.com/account/sso";
+    var ssoKey = "0123456789abcdef0123456789abcdef";
 
-    protected void Page_Load(object sender, EventArgs e)
-    {
+    var userData = new Dictionary<string, string>
+    { 
         // TODO: add your own user info here
-        ssoLogon("jane.doe@example.com", "Jane Doe");
-    }
+        { "email", "jane.doe@example.com" },
+        { "name", "Jane Doe"},
+        { "expires", DateTime.UtcNow.AddMinutes(5).ToString("o") },
+    };
 
-    void ssoLogon(string email, string name)
+    string token;
+    using (var aes = System.Security.Cryptography.Rijndael.Create())
     {
-        // Create a JSON token like so:
-        // {
-        //    "email": "jane.doe@example.com",
-        //    "name": "Jane Doe",
-        //    "expires": "2012-06-30T13:34:29.2228586Z"
-        // }
-        //
-        // Tip: consider using something like Newtonsoft.Json
+        aes.Key = hexToBin(ssoKey);
 
-        string json = "{"
-                        + "\"email\":\"" + email + "\""
-                        + ",\"name\":\"" + name + "\""
-                        + ",\"expires\":\"" + DateTime.UtcNow.AddMinutes(5).ToString("o") + "\""
-                    + "}";
+        var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+        var json = serializer.Serialize(userData);
 
-        string token = encrypt(SSO_KEY, json);
+        var bytes = Encoding.UTF8.GetBytes(json);
+        byte[] encryptedBytes;
+        using (var encryptor = aes.CreateEncryptor())
+            encryptedBytes = encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
 
-        Response.Redirect(string.Format(SSO_URL, HttpUtility.UrlEncode(token)));
-    }
-    
-    static string encrypt(string keyHex, string data)
-    {
-        // Rijndael is AES
-        using (SymmetricAlgorithm aes = Rijndael.Create())
-        {
-            aes.Key = hexToBytes(keyHex);
-            using (ICryptoTransform encryptor = aes.CreateEncryptor())
-            {
-                // Encrypt
-                byte[] bytes = Encoding.UTF8.GetBytes(data);
-                byte[] encryptedBytes = encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
+        var tokenBytes = aes.IV.Concat(encryptedBytes).ToArray();
 
-                // Concatenate IV + encryptedBytes
-                byte[] ivAndEncBytes = new byte[aes.IV.Length + encryptedBytes.Length];
-                aes.IV.CopyTo(ivAndEncBytes, 0);
-                encryptedBytes.CopyTo(ivAndEncBytes, aes.IV.Length);
-
-                // Return as Base-64 string
-                return Convert.ToBase64String(ivAndEncBytes);
-            }
-        }
-    }
-
-    static byte[] hexToBytes(String hex)
+        token = Convert.ToBase64String(tokenBytes);
+    }    
+%>
+<script runat="server">
+    static byte[] hexToBin(string hex)
     {
         byte[] bytes = new byte[hex.Length / 2];
         for (int i = 0; i < hex.Length; i += 2)
@@ -65,3 +40,20 @@
         return bytes;
     }
 </script>
+<html>
+<body>
+    <form id="ssoform" method="post" action="<%: ssoUrl %>">
+        <input type="hidden" name="token" value="<%: token %>">
+        <!-- In case script fails/not enabled, give them something to click -->
+        <input type="submit" value="Continue">
+    </form>
+    <script>
+        // Auto-submit form
+        (function () {
+            var form = document.getElementById('ssoform');
+            form.style.display = 'none';
+            form.submit();
+        })();
+    </script>
+</body>
+</html>
