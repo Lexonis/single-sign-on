@@ -20,11 +20,18 @@ The JSON data looks like so:
 
 Other values (or "claims") may be passed in the JSON if they have been agreed upon with your Lexonis representative.
 
-The JSON is then encoded to a UTF-8 byte-array and encrypted using [AES](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) using a pre-shared key (which your Lexonis representative will supply). This token is then [Base64](http://en.wikipedia.org/wiki/Base64) encoded and passed to the QA site URL-encoded, for example:
+The JSON is then encoded to a UTF-8 byte-array and encrypted using [AES](http://en.wikipedia.org/wiki/Advanced_Encryption_Standard) using a pre-shared key (which your Lexonis representative will supply). This token is then [Base64](http://en.wikipedia.org/wiki/Base64) encoded and passed to the Lexonis site. The data can be passed directly in the URL as a GET request using HTTP 302 redirect (`Response.Redirect` in ASP.NET), or hyperlink for the user to click. For example:
 
-    http://lexonis-site.example.com/account/sso?token=0vVpI3g%2fH%2flT05buNegaj4BRTEUAYUifRvn3O2b15qKZSCWBjRWqsKSzc%2fd6o%2bVJ3qOssVyZxLGyZUVI20PZMrABFEmk7O8axnimCEZdH5Ti7dLRs%2bdxCY5U9YRRZtyn%2bwgGEXkXmofaJuNTGN7rIA%3d%3d
+    http://lexonis-site.example.com/account/sso?token=0vVpI3g%2fH...
 
-This URL is typically sent to the user's browser as an HTTP 302 redirect (`Response.Redirect` in ASP.NET), but could just as easily be embedded in a hyperlink for the user to click.
+When the JSON data is larger (you are passing more custom data) then it's recommended you POST the token data in an HTML `<form>`. For example:
+
+    <form method="post" action="http://lexonis-site.example.com/account/sso">
+        <input type="hidden" name="token" value="0vVpI3g/H...">
+        <input type="submit" value="Continue">
+    </form>
+
+See the examples (ASP.NET and PHP currently) for more information.
 
 ## Other implementations ##
 
