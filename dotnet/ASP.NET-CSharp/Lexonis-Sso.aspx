@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="C#" %>
 
 <%
+    //////////////////////////////////////////////////////////
     // TODO: update URL and Key to your own
     var ssoUrl = "http://site.example.com/account/sso";
     var ssoKey = "0123456789abcdef0123456789abcdef";
@@ -12,6 +13,7 @@
         { "name", "Jane Doe"},
         { "expires", DateTime.UtcNow.AddMinutes(5).ToString("o") },
     };
+    //////////////////////////////////////////////////////////
 
     string token;
     using (var aes = System.Security.Cryptography.Rijndael.Create())
