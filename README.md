@@ -9,7 +9,7 @@ SSO is carried out by encrypting JSON-encoded user data using strong AES encrypt
 The JSON data looks like so:
 
     { 
-        "uniqueid": "242567722915",       
+        "uniqueid": "1234567",       
         "email": "jane.doe@example.com",
         "name": "Jane Doe",
         "expires": "2012-06-30T13:34:29.2228586Z"
