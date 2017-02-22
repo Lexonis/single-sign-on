@@ -16,7 +16,7 @@ The JSON data looks like so:
     }
 
 * `uniqueid` is used as the unique user identifier in QA; the user will be logged on as this user if it exists in QA, otherwise a new user account will be created.
-* 'email' will be used for a newly-created account, or to update an existing account if the user's email address changes.  
+* `email` will be used for a newly-created account, or to update an existing account if the user's email address changes.  
 * `name` will be used for a newly-created account, or to update an existing account if the user's name changes.
 * `expires` should be a UTC ISO-8601 formatted date that is a few minutes into the future. Expired dates will be rejected. It is therefore essential that your server clocks are kept in sync using something like [NTP](http://en.wikipedia.org/wiki/Network_Time_Protocol).
 
