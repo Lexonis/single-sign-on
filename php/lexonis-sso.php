@@ -6,6 +6,7 @@
 
     $user_data = array(
         // TODO: add your own user info here
+        'uniqueid' => '1234567',
         'email' => 'jane.doe@example.com',
         'name' => 'Jane Doe',
         'expires' => date("c", strtotime("+5 minutes"))
