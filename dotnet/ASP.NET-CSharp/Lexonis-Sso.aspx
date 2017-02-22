@@ -9,6 +9,7 @@
     var userData = new Dictionary<string, string>
     { 
         // TODO: add your own user info here
+        { "uniqueid", "1234567" },
         { "email", "jane.doe@example.com" },
         { "name", "Jane Doe"},
         { "expires", DateTime.UtcNow.AddMinutes(5).ToString("o") },
